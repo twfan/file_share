@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\File;
+use App\FileUpload;
 use App\Log;
 use Webpatser\Uuid\Uuid;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Filesystem\Filesystem;
+use File;
 
 class FileController extends Controller
 {
@@ -20,7 +21,7 @@ class FileController extends Controller
     public function index()
     {
         //
-        $files = File::all();
+        $files = FileUpload::all();
         return view('files.index', compact('files'));
     }
 
@@ -59,32 +60,31 @@ class FileController extends Controller
             if($request->hasFile('filename')){
                 $file['file'] = $request->filename->getClientOriginalName();
                 $request->filename->storeAs('files-upload/'.$file['uuid'], $file['file']);
+                $file['size'] = Storage::size('/files-upload/'.$file['uuid'].'/'.$file['file']);
             }
         }else{
-            $fileUpdate = File::find($request->idFile);
+            $fileUpdate = FileUpload::find($request->idFile);
             $file['uuid'] = $fileUpdate->uuid;
             $file['filename'] = $request->title;
            
             $oldFile = $fileUpdate->file;
             $oldFilePath = 'app/files-upload/'.$fileUpdate->uuid.'/'.$oldFile;
 
-            // $deleteOldFile = Storage::deleteDirectory($oldFilePath);
+            $deleteOldFile = Storage::deleteDirectory($oldFilePath);
             $deleteOldFile = unlink(storage_path($oldFilePath));
-            $deleteFolder = File::deleteDirectory(public_path('path/to/folder'));
 
             
             if($request->hasFile('filename')){
                 $file['file'] = $request->filename->getClientOriginalName();
                 $request->filename->storeAs('files-upload/'.$file['uuid'], $file['file']);
+                $file['size'] = Storage::size('/files-upload/'.$file['uuid'].'/'.$file['file']);
             }
-            // dd("tes");
-            // dd($file);
         }
 
         
         $id = $request->idFile;
-        // dd($id);
-        $File = File::updateOrCreate(['id' => $id],['uuid' => $file['uuid'], 'filename' => $request->title, 'file' => $file['file']]);
+        $File = FileUpload::updateOrCreate(['id' => $id],['uuid' => $file['uuid'], 'filename' => $request->title, 'file' => $file['file'], 'size' => $file['size'] ]);
+
         if(empty($id)){
             $log = new Log;
             $log->file_id = $File->id;
@@ -125,7 +125,7 @@ class FileController extends Controller
     public function edit($id)
     {
         //
-        $fileToEdit = \App\File::findOrFail($id);
+        $fileToEdit = \App\FileUpload::findOrFail($id);
         return $fileToEdit;
 
     }
@@ -154,7 +154,7 @@ class FileController extends Controller
     {
         //
         
-        $file = \App\File::findOrFail($id);
+        $file = \App\FileUpload::findOrFail($id);
        
         $oldFile = $file->file;
         $oldFilePath = 'app/files-upload/'.$file->uuid.'/'.$oldFile;
@@ -179,7 +179,7 @@ class FileController extends Controller
     public function download($uuid)
     {
 
-        $file = \App\File::where('uuid', $uuid)->get();
+        $file = \App\FileUpload::where('uuid', $uuid)->get();
         // dd($file[0]->id);
         $user = Auth::user();
         $log = new Log;
@@ -189,7 +189,7 @@ class FileController extends Controller
         $log->activity = "Download file";
         $log->save();
         if(!empty($user)){
-            $file = File::where('uuid', $uuid)->firstOrFail();
+            $file = FileUpload::where('uuid', $uuid)->firstOrFail();
             $pathToFile = storage_path('app/files-upload/'.$file->uuid.'/' . $file->file);
             return response()->download($pathToFile);
         }

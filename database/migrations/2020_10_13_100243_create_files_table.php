@@ -18,6 +18,7 @@ class CreateFilesTable extends Migration
             $table->uuid('uuid')->nullable();
             $table->string('filename');
             $table->string('file')->nullable();
+            $table->bigInteger('size');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -173,6 +173,7 @@
                                                     <th scope="col">No.</th>
                                                     <th scope="col">Title</th>
                                                     <th scope="col">File</th>
+                                                    <th scope="col">Size (MB)</th>
                                                     <th scope="col">Time</th>
                                                     <th class="no-sort" scope="col">Action</th>
                                                 </tr>
@@ -183,6 +184,7 @@
                                                         <td>{{ $file->id }}</td>
                                                         <td>{{ $file->filename }}</td>
                                                         <td><a href="{{ route('tes', $file->uuid) }}">{{ $file->file }}</a></td>
+                                                        <td>{{ number_format((float)$file->size / 1000000,2,'.','') }}</td>
                                                         <td>{{ $file->created_at }}</td>
                                                         <td><a href="{{ route('tes', $file->uuid) }}" class="color-black text-underline">Download</a> | <a href="#" onclick="loadLog({{ $file->id }})" data-toggle="modal" data-target="#logFile" class="color-black text-underline">Lihat Log  | <a href="#" onclick="editData({{ $file->id }})"  data-toggle="modal" data-target="#editFile"  class="editBtnModal color-black text-underline">Edit File</a>
                                                             <form action="{{route('files.destroy', [$file->id])}}" method="POST" class="d-inline" onsubmit="return confirm('Move Category to trash?')" >

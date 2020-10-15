@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\File;
+use App\FileUpload;
 
 class HomeController extends Controller
 {
@@ -30,13 +30,13 @@ class HomeController extends Controller
 
     public function handleAdmin()
     {
-        $files = File::all();
+        $files = FileUpload::all();
         return view('handleAdmin', \compact('files'));
     }
 
     public function handleUser()
     {
-        $files = File::all();
+        $files = FileUpload::all();
         return view('home', \compact('files'));
     }
 }

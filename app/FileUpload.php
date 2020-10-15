@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 // use App\Log;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class File extends Model
+class FileUpload extends Model
 {
     use SoftDeletes;
     //
-    protected $fillable = ['uuid', 'filename', 'file'];
+    protected $fillable = ['uuid', 'filename', 'file', 'size'];
+
+    protected $table ='files';
 
     public function logs()
     {

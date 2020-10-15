@@ -16,11 +16,13 @@
                         <tr>
                             <th>Filename</th>
                             <th>Download file</th>
+                            <th>Size (MB)</th>
                         </tr>
                         @forelse ($files as $file)
                             <tr>
                                 <td>{{ $file->filename }}</td>
                                 <td><a href="{{ route('files.download', $file->uuid) }}">{{ $file->file }}</a></td>
+                                <td>{{ $file->size / 1000000 }}</td>
                             </tr>
                         @empty
                             <tr>
