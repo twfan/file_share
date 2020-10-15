@@ -30,13 +30,14 @@ class HomeController extends Controller
 
     public function handleAdmin()
     {
-        $files = FileUpload::all();
+        $files = FileUpload::orderBy('created_at','desc')->get();
+        // dd($files);
         return view('handleAdmin', \compact('files'));
     }
 
     public function handleUser()
     {
-        $files = FileUpload::all();
+        $files = FileUpload::orderBy('created_at','desc')->get();
         return view('home', \compact('files'));
     }
 }

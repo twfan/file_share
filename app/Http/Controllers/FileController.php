@@ -21,7 +21,8 @@ class FileController extends Controller
     public function index()
     {
         //
-        $files = FileUpload::all();
+        $files = FileUpload::orderBy('created_at','asc')->get();
+        dd($files);
         return view('files.index', compact('files'));
     }
 
@@ -199,5 +200,9 @@ class FileController extends Controller
     public function showLog($id){
         $file = Log::where('file_id',$id)->orderBy('id','DESC')->get();
         return ["data" => $file];
+    }
+
+    public function php(){
+        return phpinfo();
     }
 }

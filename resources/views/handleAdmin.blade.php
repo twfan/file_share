@@ -167,7 +167,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table id="table-download" class="table single-card-table dt-responsive table-nowrap mb-0 mt-0">
+                                        <table id="table-download" class="table single-card-table dt-responsive table mb-0 mt-0">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">No.</th>
@@ -179,9 +179,12 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @php
+                                                    $ctr = 1;
+                                                @endphp
                                                 @forelse ($files as $file)
                                                     <tr>
-                                                        <td>{{ $file->id }}</td>
+                                                        <td>{{ $ctr++ }}</td>
                                                         <td>{{ $file->filename }}</td>
                                                         <td><a href="{{ route('tes', $file->uuid) }}">{{ $file->file }}</a></td>
                                                         <td>{{ number_format((float)$file->size / 1000000,2,'.','') }}</td>
@@ -194,6 +197,9 @@
                                                             </form>
                                                         </td>
                                                     </tr>
+                                                    @php
+                                                        $ctr++;
+                                                    @endphp
                                                 @empty
                                                     <tr>
                                                         <td colspan="2">No files found.</td>
@@ -258,6 +264,7 @@
                 $('#table-log').DataTable( {
                     "ajax": {
                         url: url,
+                        
                         dataSrc: 'data',
                     },
                     columns: [

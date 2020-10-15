@@ -20,8 +20,15 @@ Auth::routes([
     'verify' => false, // Email Verification Routes...
   ]);
 
+   Route::get('/', function () {
+        return redirect(route('login'));
+    });
+
 
 Route::group(['middleware' => ['auth']], function(){
+    
+
+    
     
     Route::get('download/{uuid}/download','FileController@download')->name('tes');
 
@@ -32,7 +39,9 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/admin/file/{id}/edit', 'FileController@edit');
         Route::post('/admin/file/{id}','FileController@update')->name('file.update');
         Route::get('/admin/log/{id}', 'FileController@showLog')->name('file.log');
-        
+        // Route::get('/', function () {
+        //     return redirect(route('admin.home'));
+        // });
        
 
         Route::resource('files', 'FileController');
@@ -45,7 +54,9 @@ Route::group(['middleware' => ['auth']], function(){
     });
 
     Route::group(['middleware' => ['user']], function(){
-        
+        // Route::get('/', function () {
+        //     return redirect(route('home'));
+        // });
         Route::get('home', 'HomeController@handleUser')->name('home');
         Route::get('log/{id}', 'FileController@showLog')->name('file.log');
         Route::post('changepassword','UserController@changePassword')->name('user.password.change');
@@ -55,10 +66,6 @@ Route::group(['middleware' => ['auth']], function(){
 
 
 
-
-Route::get('/', function () {
-    return view('auth.login');
-});
 
 
 // Route::resource('files', 'FileController');
